@@ -1,0 +1,39 @@
+{
+  "name": "waifubotdiscord",
+  "version": "1.0.0",
+  "description": "A waifu bot for Discord",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon ./build/index.js",
+    "lint": "npx eslint . --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ds-waifu-js"
+  },
+  "keywords": [
+    "discord",
+    "waifu",
+    "js",
+    "bot"
+  ],
+  "author": "Kingo",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "tslib": "^2.1.0"
+  },
+  "devDependencies": {
+    "@typeit/discord": "^4.0.9",
+    "@types/node": "^14.14.22",
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/parser": "^4.14.0",
+    "eslint": "^7.18.0",
+    "mongoose": "^5.11.13",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.3"
+  }
+}
