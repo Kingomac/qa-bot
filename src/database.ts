@@ -33,6 +33,21 @@ export class DatabaseConnection {
     });
     return ans;
   }
+  async searchSimilars(question: string): Promise<IQuestion[]> {
+    const questions = await Question.where("question")
+      .equals(await parseMsg(question))
+      .exec();
+    const r: IQuestion[] = [];
+    questions.forEach((q) => {
+      if (q != null) r.push(q as IQuestion);
+    });
+    return r;
+  }
+  async deleteById(...ids: string[]): Promise<void> {
+    ids.forEach(async (id: string) => {
+      await Question.findByIdAndDelete(id);
+    });
+  }
   async close(): Promise<void> {
     await this.db.close();
   }
