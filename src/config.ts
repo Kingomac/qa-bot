@@ -3,6 +3,7 @@ export const Config = {
   commands: {
     delete: "borrar",
     search: "buscar:",
+    deleteId: "borrar:",
   },
   qa: {
     question: "$",

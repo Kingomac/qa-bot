@@ -14,6 +14,7 @@ abstract class CommandMode {
   ) {
     if (message.author.bot) return;
     const l = message.content.replace(Config.command, "");
+
     if (l == Config.commands.delete) {
       let messages: Collection<string, Message>;
       do {
@@ -29,6 +30,8 @@ abstract class CommandMode {
           `_id:${q._id} / question:${q.question} / answer:${q.answer}`
         );
       });
+    } else if (l.startsWith(Config.commands.deleteId)) {
+      await db.deleteById(l.replace(Config.commands.deleteId, ""));
     }
   }
 }
