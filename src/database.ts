@@ -33,10 +33,10 @@ export class DatabaseConnection {
   ): Unsubscribe {
     return this.emitter.on(event, callback);
   }
-  async newQuestion(q: string, a: string): Promise<boolean> {
+  async newQuestion(q: string, a: string): Promise<string> {
     const data = await Question.create({ question: q, answer: a });
-    if (data.errors) return false;
-    else return true;
+    if (data.errors) return data.errors.message;
+    else return null;
   }
   async ask(q: string): Promise<string> {
     const question = await Question.where("question")
@@ -60,7 +60,7 @@ export class DatabaseConnection {
   }
   async deleteById(...ids: string[]): Promise<void> {
     ids.forEach(async (id: string) => {
-      await Question.findByIdAndDelete(id);
+      await Question.findByIdAndRemove(id).exec();
     });
   }
   async close(): Promise<void> {

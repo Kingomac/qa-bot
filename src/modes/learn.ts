@@ -3,6 +3,7 @@ import { Client } from "discord.js";
 import * as dotenv from "dotenv";
 import { db, randomReplier } from "..";
 import { Config } from "../config";
+import { parseMsg } from "../parser";
 
 @Discord(Config.learn.command) // Decorate the class
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,14 +27,12 @@ abstract class LearnMode {
       const l = message.content
         .replace(Config.learn.command, "")
         .split(Config.learn.answer, 2);
-      const ok = await db.newQuestion(l[0], l[1]);
-      if (ok) message.reply("Pregunta añadida");
-      else message.reply("Error añadiendo la pregunta");
+      const err = await db.newQuestion(await parseMsg(l[0]), l[1]);
+      message.reply(err ? err : "Pregunta añadida");
     } else {
       const l = message.content.replace(Config.learn.command, "");
-      if (await randomReplier.add(l))
-        message.reply("Respuesta aleatoria añadida");
-      else message.reply("Error añadiendo la respuesta");
+      const r = await randomReplier.add(l);
+      message.reply(r ? r : "Respuesta aleatoria añadida");
     }
   }
 }

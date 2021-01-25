@@ -16,7 +16,10 @@ abstract class CommandMode {
     if (message.author.bot) return;
     const l = message.content.replace(Config.general.command, "");
 
-    if (l == Config.general.commands.delete) {
+    if (
+      l == Config.general.commands.delete &&
+      message.member.roles.cache.find((r) => r.name == "ADMIN")
+    ) {
       let messages: Collection<string, Message>;
       do {
         messages = await message.channel.messages.fetch({ limit: 100 });

@@ -11,11 +11,10 @@ export class RandomReply {
   async get(): Promise<string> {
     return this.replies[Math.floor(Math.random() * this.replies.length)];
   }
-  async add(a: string): Promise<boolean> {
+  async add(a: string): Promise<string> {
     const data = await Random.create({ message: a });
-    if (data.errors) {
-      return false;
-    } else return true;
+    if (data.errors) return data.errors.message;
+    else return null;
   }
   async delete(a: string): Promise<boolean> {
     const index = this.replies.indexOf(a);
