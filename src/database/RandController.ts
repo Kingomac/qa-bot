@@ -1,6 +1,6 @@
-import { IRandom, Random } from "./models/random";
+import { Random, IRandom } from "../models/random";
 
-export class RandomReply {
+export default class RandController {
   replies: string[] = [];
   async initialize(): Promise<void> {
     const r = await Random.find({}).exec();

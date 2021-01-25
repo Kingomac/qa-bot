@@ -1,7 +1,7 @@
 import { ArgsOf, Discord, On } from "@typeit/discord";
 import { Client } from "discord.js";
 import { Config } from "../config";
-import { randomReplier } from "../index";
+import { randController } from "../index";
 import * as dotenv from "dotenv";
 
 @Discord(Config.rand.command) // Decorate the class
@@ -22,10 +22,10 @@ abstract class CommandMode {
     const l = message.content.replace(Config.rand.command, "");
     if (l.startsWith(Config.rand.commands.delete)) {
       const ll = l.replace(Config.rand.commands.delete, "");
-      if (await randomReplier.delete(ll)) message.reply(`${l} borrado`);
+      if (await randController.delete(ll)) message.reply(`${l} borrado`);
       else message.reply(`Error borrando ${ll}`);
     } else if (l == Config.rand.commands.list) {
-      randomReplier.replies.forEach((i) => {
+      randController.replies.forEach((i) => {
         setTimeout(() => {
           message.channel.send(i);
         }, 200);

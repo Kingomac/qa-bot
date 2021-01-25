@@ -1,7 +1,8 @@
 import { ArgsOf, Discord, On } from "@typeit/discord";
 import { Client } from "discord.js";
 import * as dotenv from "dotenv";
-import { db, randomReplier } from "..";
+import { randController } from "..";
+import QAController from "../database/QAController";
 import { Config } from "../config";
 
 @Discord() // Decorate the class
@@ -24,7 +25,7 @@ abstract class ReplyMode {
       message.content.startsWith(Config.general.command)
     )
       return;
-    const m = await db.ask(message.content);
-    message.reply(m || (await randomReplier.get()));
+    const m = await QAController.ask(message.content);
+    message.reply(m || (await randController.get()));
   }
 }

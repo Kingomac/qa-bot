@@ -2,7 +2,7 @@ import { ArgsOf, Discord, On } from "@typeit/discord";
 import { Client } from "discord.js";
 import { Config } from "../config";
 import { IQuestion } from "../models/question";
-import { db } from "../index";
+import QAController from "../database/QAController";
 import * as dotenv from "dotenv";
 
 @Discord(Config.qa.command) // Decorate the class
@@ -22,7 +22,7 @@ abstract class CommandMode {
     const l = message.content.replace(Config.qa.command, "");
 
     if (l.startsWith(Config.qa.commands.search)) {
-      const questions: IQuestion[] = await db.searchSimilars(
+      const questions: IQuestion[] = await QAController.searchSimilars(
         l.replace(Config.qa.commands.search, "")
       );
       questions.forEach(async (q) => {
@@ -31,7 +31,7 @@ abstract class CommandMode {
         );
       });
     } else if (l.startsWith(Config.qa.commands.deleteId)) {
-      await db.deleteById(l.replace(Config.qa.commands.deleteId, ""));
+      await QAController.deleteById(l.replace(Config.qa.commands.deleteId, ""));
     }
   }
 }

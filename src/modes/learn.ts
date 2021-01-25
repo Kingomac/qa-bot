@@ -1,9 +1,10 @@
 import { ArgsOf, Discord, On } from "@typeit/discord";
 import { Client } from "discord.js";
 import * as dotenv from "dotenv";
-import { db, randomReplier } from "..";
+import { randController } from "..";
 import { Config } from "../config";
 import { parseMsg } from "../parser";
+import QAController from "../database/QAController";
 
 @Discord(Config.learn.command) // Decorate the class
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,11 +28,11 @@ abstract class LearnMode {
       const l = message.content
         .replace(Config.learn.command, "")
         .split(Config.learn.answer, 2);
-      const err = await db.newQuestion(await parseMsg(l[0]), l[1]);
+      const err = await QAController.newQuestion(await parseMsg(l[0]), l[1]);
       message.reply(err ? err : "Pregunta añadida");
     } else {
       const l = message.content.replace(Config.learn.command, "");
-      const r = await randomReplier.add(l);
+      const r = await randController.add(l);
       message.reply(r ? r : "Respuesta aleatoria añadida");
     }
   }

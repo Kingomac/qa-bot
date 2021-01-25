@@ -1,7 +1,7 @@
 import { Client } from "@typeit/discord";
 import * as dotenv from "dotenv";
-import { DatabaseConnection } from "./database";
-import { RandomReply } from "./randomReply";
+import { DatabaseManager } from "./database/manager";
+import RandController from "./database/RandController";
 
 async function start(token: string) {
   if (env.error) throw env.error;
@@ -26,8 +26,8 @@ async function start(token: string) {
 }
 
 const env = dotenv.config();
-export const db = new DatabaseConnection(env.parsed.DB_URL);
-export const randomReplier = new RandomReply();
-db.on("ready", () => randomReplier.initialize());
+export const db = new DatabaseManager(env.parsed.DB_URL);
+export const randController = new RandController();
+db.on("ready", () => randController.initialize());
 
 start(env.parsed.BOT_TOKEN);
