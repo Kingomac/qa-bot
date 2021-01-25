@@ -1,10 +1,18 @@
 import * as mongoose from "mongoose";
 import { IQuestion, Question } from "./models/question";
 import { parseMsg } from "./parser";
+import { createNanoEvents, Emitter, Unsubscribe } from "nanoevents";
+
+interface DatabaseEvents {
+  ready: () => Promise<void>;
+  closing: () => Promise<void>;
+}
 
 export class DatabaseConnection {
+  emitter: Emitter;
   db: mongoose.Connection;
   constructor(url: string) {
+    this.emitter = createNanoEvents<DatabaseEvents>();
     mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -16,7 +24,14 @@ export class DatabaseConnection {
     });
     this.db.once("open", () => {
       console.log("Database connected successfully");
+      this.emitter.emit("ready");
     });
+  }
+  on<E extends keyof DatabaseEvents>(
+    event: E,
+    callback: DatabaseEvents[E]
+  ): Unsubscribe {
+    return this.emitter.on(event, callback);
   }
   async newQuestion(q: string, a: string): Promise<boolean> {
     const data = await Question.create({ question: q, answer: a });
@@ -27,7 +42,7 @@ export class DatabaseConnection {
     const question = await Question.where("question")
       .equals(await parseMsg(q))
       .exec();
-    let ans = "No c";
+    let ans: string = null;
     question.forEach((i: IQuestion) => {
       ans = i.answer;
     });
@@ -49,6 +64,7 @@ export class DatabaseConnection {
     });
   }
   async close(): Promise<void> {
+    this.emitter.emit("closing");
     await this.db.close();
   }
 }

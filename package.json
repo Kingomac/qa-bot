@@ -23,6 +23,7 @@
   "dependencies": {
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "nanoevents": "^5.1.10",
     "tslib": "^2.1.0"
   },
   "devDependencies": {
