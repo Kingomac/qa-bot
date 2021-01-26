@@ -1,3 +1,4 @@
+import { Document } from "mongoose";
 import { IQuestion, Question } from "../models/question";
 import { parseMsg } from "../parser";
 
@@ -11,11 +12,8 @@ export default class QAController {
     const question = await Question.where("question")
       .equals(await parseMsg(q))
       .exec();
-    let ans: string = null;
-    question.forEach((i: IQuestion) => {
-      ans = i.answer;
-    });
-    return ans;
+    const ans: Document = question[Math.floor(Math.random() * question.length)];
+    return ans ? ans["answer"] : null;
   }
   static async searchSimilars(question: string): Promise<IQuestion[]> {
     const questions = await Question.where("question")
