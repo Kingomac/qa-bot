@@ -10,12 +10,12 @@ interface DatabaseEvents {
 export class DatabaseManager {
   emitter: Emitter;
   db: mongoose.Connection;
-  constructor(url: string) {
+  constructor(host: string, port: number, dbName: string) {
     this.emitter = createNanoEvents<DatabaseEvents>();
-    mongoose.connect(url, {
+    mongoose.connect(`mongodb://${host}:${port}`, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      dbName: "waifu-bot",
+      dbName,
     });
     this.db = mongoose.connection;
     this.db.on("error", (err) => {

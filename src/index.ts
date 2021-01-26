@@ -26,7 +26,11 @@ async function start(token: string) {
 }
 
 const env = dotenv.config();
-export const db = new DatabaseManager(env.parsed.DB_URL);
+export const db = new DatabaseManager(
+  env.parsed.DB_HOST,
+  parseInt(env.parsed.DB_PORT),
+  env.parsed.DB_NAME
+);
 export const randController = new RandController();
 db.on("ready", () => randController.initialize());
 

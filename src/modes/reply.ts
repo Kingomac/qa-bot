@@ -21,7 +21,7 @@ abstract class ReplyMode {
       message.channel.send(`Channel id: ${message.channel.id}`);
     if (
       message.author.bot ||
-      message.channel.id != env.parsed.REPPLY_CHANNEL ||
+      message.channel.id != env.parsed.REPLY_CHANNEL ||
       message.content.startsWith(Config.general.command)
     )
       return;

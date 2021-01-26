@@ -3,6 +3,7 @@ export const Config = {
     command: "y:",
     commands: {
       delete: "borrar",
+      backup: "guardar",
     },
   },
   qa: {
