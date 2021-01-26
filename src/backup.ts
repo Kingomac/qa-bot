@@ -4,32 +4,37 @@ import { createWriteStream } from "fs";
 import { c } from "tar";
 import * as dotenv from "dotenv";
 
-export default class Backup {
+export type BackupResponse = {
+  message: string;
+  path: string;
+};
+
+export class Backup {
   static env = dotenv.config();
-  static async create(): Promise<string> {
+  static async create(): Promise<BackupResponse> {
     const ex = promisify(exec);
     const res = await ex(
       `${this.env.parsed.MONGODUMP} --host=${this.env.parsed.DB_HOST} --port=${this.env.parsed.DB_PORT} --db=${this.env.parsed.DB_NAME} --out=${this.env.parsed.BACKUP_LOCATION}`
     );
     if (res.stderr) {
       try {
-        await Backup.compress();
-        return `${res.stderr}Compression successful`;
+        return {
+          message: `${res.stderr}Compression successful`,
+          path: await Backup.compress(),
+        };
       } catch (e) {
-        return `${res.stderr}*${e}`;
+        return { message: `${res.stderr}*${e}`, path: null };
       }
-    } else return res.stdout;
+    } else return { message: res.stdout, path: null };
   }
-  static async compress(): Promise<void> {
+  static async compress(): Promise<string> {
     const date = new Date();
+    const path = `${this.env.parsed.BACKUP_LOCATION}/${
+      this.env.parsed.DB_NAME
+    }-${date.toISOString().split(":").join("_").split(".")[0]}.tgz`;
     c({ gzip: true }, [
       `${this.env.parsed.BACKUP_LOCATION}/${this.env.parsed.DB_NAME}/`,
-    ]).pipe(
-      createWriteStream(
-        `${this.env.parsed.BACKUP_LOCATION}/${this.env.parsed.DB_NAME}-${
-          date.toISOString().split(":").join("_").split(".")[0]
-        }.tgz`
-      )
-    );
+    ]).pipe(createWriteStream(path));
+    return path;
   }
 }

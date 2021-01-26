@@ -1,7 +1,7 @@
 import { ArgsOf, Discord, On } from "@typeit/discord";
 import { Client, Collection, Message } from "discord.js";
 import { Config } from "../config";
-import Backup from "../backup";
+import { BackupResponse, Backup } from "../backup";
 
 @Discord(Config.general.command) // Decorate the class
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,7 +27,8 @@ abstract class CommandMode {
         message.channel.messages.channel.bulkDelete(messages);
       } while (messages.size >= 2);
     } else if (l == Config.general.commands.backup) {
-      message.channel.send(await Backup.create());
+      const b: BackupResponse = await Backup.create();
+      message.channel.send(b.message, { files: [b.path] });
     }
   }
 }

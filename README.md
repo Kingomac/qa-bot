@@ -4,7 +4,7 @@ This is a Discord Bot that answer questions stores in a MongoDB database. It's m
 
 # Requirements
 
-- [Nodejs](https://nodejs.org/es/). Tested with Nodejs 14.15.4.
+- [Nodejs](https://nodejs.org/es/). Tested with Nodejs 12.20.1.
 - [MongoDB Server](https://www.mongodb.com/try/download/community)
 - [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools) for the backups.
 
