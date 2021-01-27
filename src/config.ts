@@ -24,4 +24,15 @@ export const Config = {
     command: "y-l:",
     answer: "::",
   },
+  music: {
+    command: "y-m:",
+    commands: {
+      random: "aleatorio",
+      pause: "pausa",
+      resume: "reanudar",
+      previous: "anterior",
+      next: "siguiente",
+      stop: "detener",
+    },
+  },
 };
