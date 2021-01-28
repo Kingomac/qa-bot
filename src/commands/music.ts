@@ -1,9 +1,9 @@
 import { ArgsOf, Discord, On } from "@typeit/discord";
 import { Client } from "discord.js";
 import { Config } from "../config";
-import MusicPlayer from "../modes/music";
+import { LocalMusicPlayer, YTPlayer } from "../modes/music";
 
-let m: MusicPlayer;
+let m: LocalMusicPlayer | YTPlayer;
 
 @Discord(Config.music.command) // Decorate the class
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -21,19 +21,28 @@ abstract class PlayMusic {
       if (
         simpMessage == "" ||
         simpMessage == Config.music.commands.random ||
-        simpMessage.startsWith("http")
+        simpMessage.includes("https://")
       ) {
-        m = new MusicPlayer(await message.member.voice.channel.join(), {
-          random: simpMessage == Config.music.commands.random,
-          url: simpMessage.startsWith("http") ? simpMessage : null,
-        });
-        await m.loadSongs();
-        m.on("playingNext", async (next: string) => {
+        m = simpMessage.includes("https://www.youtube.com")
+          ? new YTPlayer(
+              await message.member.voice.channel.join(),
+              simpMessage.replace(`${Config.music.commands.random}:`, ""),
+              simpMessage.includes(Config.music.commands.random)
+            )
+          : new LocalMusicPlayer(await message.member.voice.channel.join(), {
+              random: simpMessage == Config.music.commands.random,
+              url: simpMessage.includes("https://") ? simpMessage : null,
+            });
+        m.on("songStart", async (next: string) => {
           message.channel.send("Reproduciendo: " + next);
         });
         m.on("finished", async () => {
-          message.channel.send("Se acabó");
+          message.channel.send("La canción terminó");
         });
+        m.on("error", async (err) => {
+          message.channel.send(err);
+        });
+        await m.loadSongs();
         await m.play();
       } else if (simpMessage == Config.music.commands.pause) {
         m.pause();

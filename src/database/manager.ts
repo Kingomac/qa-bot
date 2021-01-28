@@ -20,7 +20,7 @@ export class DatabaseManager {
     this.db = mongoose.connection;
     this.db.on("error", (err) => {
       this.emitter.emit("error", err);
-      throw "Database connection error";
+      console.log("Database connection error");
     });
     this.db.once("open", () => {
       console.log("Database connected successfully");
