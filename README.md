@@ -19,8 +19,9 @@ LEARN_CHANNEL=(id of the learn channel)
 DB_HOST=localhost
 DB_PORT=27017
 DB_NAME=(db name)
-MONGODUMP=(path to mongodump.exe from MongoDB Tools)
+MONGODUMP=(path to mongodump.exe from MongoDB Tools. If it's in PATH just write mongodump)
 BACKUP_LOCATION=(path to backup location)
+MUSIC_LOCATION=(path to a folder to play music from)
 MODE=testing (shows channel id in every message)/development/production
 ```
 
@@ -38,3 +39,15 @@ For LEARN_CHANNEL:
 - `y-r:borrar:(random answer)`: deletes a random answer without writing the \_id.
 - `y:borrar`: only for members with the role ADMIN. Deletes every message in the channel (works in every channel).
 - `y:guardar`: creates a backup
+
+Music commands:
+
+- `y-m`: play local music in order.
+- `y-m:aleatorio`: play local music in random order.
+- `y-m:(youtube link)`: play Youtube video or playlist in order.
+- `y-m:aleatorio:(youtube link)`: play Youtube playlist in random order.
+- `y-m:siguiente`: play the next song or random song.
+- `y-m:anterior`: play previous song.
+- `y-m:pausa`: pause song.
+- `y-m:reanudar`: resume song.
+- `y-m:detener`: stop song and leave voice chat.
