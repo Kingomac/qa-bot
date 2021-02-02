@@ -9,8 +9,14 @@ export type BackupResponse = {
   path: string;
 };
 
+/**
+ * @description Contains static methods to manage backups
+ */
 export class Backup {
   static env = dotenv.config();
+  /**
+   * @description Creates a backup and compress it
+   */
   static async create(): Promise<BackupResponse> {
     const ex = promisify(exec);
     const res = await ex(
@@ -27,7 +33,7 @@ export class Backup {
       }
     } else return { message: res.stdout, path: null };
   }
-  static async compress(): Promise<string> {
+  private static async compress(): Promise<string> {
     const date = new Date();
     const path = `${this.env.parsed.BACKUP_LOCATION}/${
       this.env.parsed.DB_NAME

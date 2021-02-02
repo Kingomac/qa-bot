@@ -75,10 +75,16 @@ export class LocalMusicPlayer implements IMusicPlayer {
         name: await this.getSongTitle(),
       },
     });
-    this.dis.on("start", () => {
-      this.emitter.emit("songStart", this.getSongTitle());
+    this.dis.on("start", async () => {
+      this.emitter.emit("songStart", await this.getSongTitle());
     });
-    this.dis.on("error", (e) => this.emitter.emit("error", e.message));
+    this.dis.on("error", (e) => {
+      this.emitter.emit("error", e.message);
+      console.log(e.message);
+    });
+    this.dis.on("close", () => {
+      client.user.setPresence({ activity: null });
+    });
     this.dis.on("finish", async () => {
       if (this.random) {
         this.index = Math.floor(Math.random() * this.songs.length);
@@ -167,7 +173,6 @@ export class YTPlayer {
   }
 
   async play(): Promise<void> {
-    console.log(this.songs[this.index].url);
     this.stream = ytdl(this.songs[this.index].url, { quality: 140 });
     this.dis = this.conn.play(this.stream);
     this.dis.on("error", (e) => this.emitter.emit("error", e.message));
@@ -204,7 +209,6 @@ export class YTPlayer {
   }
   async loadSongs(): Promise<void> {
     this.songs = [];
-    console.log(this.url);
     if (this.url.includes("list=")) {
       try {
         const list = await ytpl(this.url.split("&index")[0], {

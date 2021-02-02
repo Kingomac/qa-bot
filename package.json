@@ -4,7 +4,7 @@
   "description": "A waifu bot for Discord",
   "main": "./src/index.js",
   "scripts": {
-    "test": "test",
+    "test": "jest",
     "start": "nodemon ./build/index.js",
     "lint": "npx eslint . --ext .ts"
   },
@@ -32,14 +32,17 @@
   },
   "devDependencies": {
     "@typeit/discord": "^4.0.9",
+    "@types/jest": "^26.0.20",
     "@types/node": "^14.14.22",
     "@types/tar": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
     "eslint": "^7.18.0",
+    "jest": "^26.6.3",
     "mongoose": "^5.11.13",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
+    "ts-jest": "^26.5.0",
     "typescript": "^4.1.3"
   }
 }

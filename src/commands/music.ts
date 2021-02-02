@@ -1,13 +1,13 @@
-import { ArgsOf, Discord, On } from "@typeit/discord";
+import { ArgsOf, Command, Discord, On } from "@typeit/discord";
 import { Client } from "discord.js";
 import { Config } from "../config";
 import { LocalMusicPlayer, YTPlayer } from "../modes/music";
 
-let m: LocalMusicPlayer | YTPlayer;
-
 @Discord(Config.music.command) // Decorate the class
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 abstract class PlayMusic {
+  player: LocalMusicPlayer | YTPlayer;
+
   @On("message")
   private async onReady(
     [message]: ArgsOf<"message">,
@@ -23,7 +23,7 @@ abstract class PlayMusic {
         simpMessage == Config.music.commands.random ||
         simpMessage.includes("https://")
       ) {
-        m = simpMessage.includes("https://www.youtube.com")
+        this.player = simpMessage.includes("https://www.youtube.com")
           ? new YTPlayer(
               await message.member.voice.channel.join(),
               simpMessage.replace(`${Config.music.commands.random}:`, ""),
@@ -33,27 +33,17 @@ abstract class PlayMusic {
               random: simpMessage == Config.music.commands.random,
               url: simpMessage.includes("https://") ? simpMessage : null,
             });
-        m.on("songStart", async (next: string) => {
+        await this.player.loadSongs();
+        this.player.on("songStart", async (next: string) => {
           message.channel.send("Reproduciendo: " + next);
         });
-        m.on("finished", async () => {
+        this.player.on("finished", async () => {
           message.channel.send("La canción terminó");
         });
-        m.on("error", async (err) => {
+        this.player.on("error", async (err) => {
           message.channel.send(err);
         });
-        await m.loadSongs();
-        await m.play();
-      } else if (simpMessage == Config.music.commands.pause) {
-        m.pause();
-      } else if (simpMessage == Config.music.commands.resume) {
-        m.resume();
-      } else if (simpMessage == Config.music.commands.previous) {
-        await m.previous();
-      } else if (simpMessage == Config.music.commands.next) {
-        await m.next();
-      } else if (simpMessage == Config.music.commands.stop) {
-        m.stop();
+        await this.player.play();
       }
     } else {
       if (
@@ -62,5 +52,25 @@ abstract class PlayMusic {
       )
         message.reply("Para reproducir música entra en un canal de voz");
     }
+  }
+  @Command(Config.music.commands.next)
+  private async next() {
+    await this.player.next();
+  }
+  @Command(Config.music.commands.previous)
+  private async previous() {
+    await this.player.previous();
+  }
+  @Command(Config.music.commands.pause)
+  private async pause() {
+    await this.player.pause();
+  }
+  @Command(Config.music.commands.resume)
+  private async resume() {
+    await this.player.resume();
+  }
+  @Command(Config.music.commands.stop)
+  private async stop() {
+    await this.player.stop();
   }
 }
