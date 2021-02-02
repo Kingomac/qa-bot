@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "start": "nodemon ./build/index.js",
-    "lint": "npx eslint . --ext .ts"
+    "lint": "npx eslint . --ext .ts",
+    "build": "npx tsc"
   },
   "repository": {
     "type": "git",
